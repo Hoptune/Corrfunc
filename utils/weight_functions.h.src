@@ -111,7 +111,8 @@ static inline AVX_FLOATS avx_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
 
 #ifdef __SSE4_2__
 static inline SSE_FLOATS sse_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return SSE_COMPARE_FLOATS_EQ(pair->weights0[0].s, pair->weights1[0].s);
+    return SSE_MULTIPLY_FLOATS(SSE_COMPARE_FLOATS_GE(pair->weights0[0].s, pair->weights1[0].s),
+            SSE_COMPARE_FLOATS_LE(pair->weights0[0].s, pair->weights1[0].s));
 }
 #endif
 
