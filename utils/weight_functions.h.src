@@ -110,7 +110,7 @@ static inline weight_func_t_DOUBLE get_weight_func_by_method_DOUBLE(const weight
         case PAIR_PRODUCT:
             return &pair_product_DOUBLE;
         case PAIR_AND:
-            return &pair_and_DOUBLE
+            return &pair_and_DOUBLE;
         default:
         case NONE:
             return NULL;
