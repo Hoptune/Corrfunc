@@ -152,7 +152,7 @@ extern "C" {
 
 // X OP Y
 #define AVX512_COMPARE_FLOATS(X, Y, OP)                           _mm512_cmp_ps_mask(X, Y, OP)
-#define AVX512_COMPARE_FLOATS_EQ(X, Y)                            _mm512_cmp_ps_mask(X, Y, _CMP_EQ_OQ)
+
 //Mask operations (new in AVX512)
 #define AVX512_MASK_COMPARE_FLOATS(M, X, Y, OP)                   _mm512_mask_cmp_ps_mask(M, X, Y, OP)
 #define AVX512_BLEND_FLOATS_WITH_MASK(MASK, FALSE,TRUE)           _mm512_mask_blend_ps(MASK, FALSE,TRUE)

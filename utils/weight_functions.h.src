@@ -97,24 +97,6 @@ static inline DOUBLE pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
     return pair->weights0[0].d == pair->weights1[0].d;
 }
 
-#ifdef __AVX512F__
-static inline AVX512_FLOATS avx512_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return AVX512_COMPARE_FLOATS_EQ(pair->weights0[0].a512, pair->weights1[0].a512);
-}
-#endif
-
-#ifdef __AVX__
-static inline AVX_FLOATS avx_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return AVX_COMPARE_FLOATS_EQ(pair->weights0[0].a, pair->weights1[0].a);
-}
-#endif
-
-#ifdef __SSE4_2__
-static inline SSE_FLOATS sse_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return SSE_COMPARE_FLOATS_EQ(pair->weights0[0].s, pair->weights1[0].s);
-}
-#endif
-
 //////////////////////////////////
 // Utility functions
 //////////////////////////////////
@@ -140,8 +122,6 @@ static inline avx512_weight_func_t_DOUBLE get_avx512_weight_func_by_method_DOUBL
     switch(method){
         case PAIR_PRODUCT:
             return &avx512_pair_product_DOUBLE;
-        case PAIR_AND:
-            return &avx512_pair_and_DOUBLE;
         default:
         case NONE:
             return NULL;
@@ -155,8 +135,6 @@ static inline avx_weight_func_t_DOUBLE get_avx_weight_func_by_method_DOUBLE(cons
     switch(method){
         case PAIR_PRODUCT:
             return &avx_pair_product_DOUBLE;
-        case PAIR_AND:
-            return &avx_pair_and_DOUBLE;
         default:
         case NONE:
             return NULL;
@@ -169,8 +147,6 @@ static inline sse_weight_func_t_DOUBLE get_sse_weight_func_by_method_DOUBLE(cons
     switch(method){
         case PAIR_PRODUCT:
             return &sse_pair_product_DOUBLE;
-        case PAIR_AND:
-            return &sse_pair_and_DOUBLE;
         default:
         case NONE:
             return NULL;
