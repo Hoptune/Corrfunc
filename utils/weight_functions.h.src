@@ -90,6 +90,13 @@ static inline SSE_FLOATS sse_pair_product_DOUBLE(const pair_struct_DOUBLE *pair)
 }
 #endif
 
+/*
+ * The pair weight is 1 if two weights equal and 0 elsewhere
+ */
+static inline DOUBLE pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
+    return pair->weights0[0].d == pair->weights1[0].d;
+}
+
 //////////////////////////////////
 // Utility functions
 //////////////////////////////////
@@ -102,6 +109,8 @@ static inline weight_func_t_DOUBLE get_weight_func_by_method_DOUBLE(const weight
     switch(method){
         case PAIR_PRODUCT:
             return &pair_product_DOUBLE;
+        case PAIR_AND:
+            return &pair_and_DOUBLE
         default:
         case NONE:
             return NULL;

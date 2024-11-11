@@ -359,6 +359,7 @@ typedef struct
 typedef enum {
   NONE=-42, /* default */
   PAIR_PRODUCT=0,
+  PAIR_AND=1,
   NUM_WEIGHT_TYPE
 } weight_method_t; // type of weighting to apply
 
@@ -367,6 +368,8 @@ typedef enum {
 static inline int get_num_weights_by_method(const weight_method_t method){
     switch(method){
         case PAIR_PRODUCT:
+            return 1;
+        case PAIR_AND:
             return 1;
         default:
         case NONE:
@@ -388,7 +391,10 @@ static inline int get_weight_method_by_name(const char *name, weight_method_t *m
         *method = PAIR_PRODUCT;
         return EXIT_SUCCESS;
     }
-
+    if(strcmp(name, "pair_and") == 0){
+        *method = PAIR_AND;
+        return EXIT_SUCCESS;
+    }
     return EXIT_FAILURE;
 }
 
