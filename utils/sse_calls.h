@@ -46,7 +46,7 @@ extern "C" {
 #define SSE_COMPARE_FLOATS_LT(X,Y)       _mm_cmplt_ps(X,Y)
 #define SSE_COMPARE_FLOATS_LE(X,Y)       _mm_cmple_ps(X,Y)    
 #define SSE_COMPARE_FLOATS_GT(X,Y)       _mm_cmpgt_ps(X,Y)
-#define SSE_COMPARE_FLOATS_EQ(X,Y)       _mm_cmpeq_ss(X,Y)
+#define SSE_COMPARE_FLOATS_EQ(X,Y)       _mm_cmpeq_pd(X,Y)
 
 // X OP Y
 // #define SSE_COMPARE_FLOATS(X,Y,OP)        _mm_cmp_ps(X,Y,OP)
