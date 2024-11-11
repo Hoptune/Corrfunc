@@ -47,7 +47,7 @@ extern "C" {
 #define SSE_COMPARE_FLOATS_LE(X,Y)       _mm_cmple_ps(X,Y)    
 #define SSE_COMPARE_FLOATS_GT(X,Y)       _mm_cmpgt_ps(X,Y)    
 // X OP Y
-//#define SSE_COMPARE_FLOATS(X,Y,OP)        _mm_cmp_ps(X,Y,OP)
+#define SSE_COMPARE_FLOATS(X,Y,OP)        _mm_cmp_ps(X,Y,OP)
 #define SSE_BITWISE_AND(X,Y)              _mm_and_ps(X,Y)
 
 //MoveMask
