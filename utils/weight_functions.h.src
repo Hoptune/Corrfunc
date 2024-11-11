@@ -105,7 +105,7 @@ static inline AVX512_FLOATS avx512_pair_and_DOUBLE(const pair_struct_DOUBLE *pai
 
 #ifdef __AVX__
 static inline AVX_FLOATS avx_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return AVX_COMPARE_FLOATS_EQ(pair->weights0[0].a, pair->weights1[0].a, _CMP_EQ_OQ);
+    return AVX_COMPARE_FLOATS(pair->weights0[0].a, pair->weights1[0].a, _CMP_EQ_OQ);
 }
 #endif
 
