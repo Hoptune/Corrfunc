@@ -99,19 +99,19 @@ static inline DOUBLE pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
 
 #ifdef __AVX512F__
 static inline AVX512_FLOATS avx512_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return AVX512_COMPARE_FLOATS(pair->weights0[0].a512, pair->weights1[0].a512, ==);
+    return AVX512_COMPARE_FLOATS_EQ(pair->weights0[0].a512, pair->weights1[0].a512);
 }
 #endif
 
 #ifdef __AVX__
 static inline AVX_FLOATS avx_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return AVX_COMPARE_FLOATS(pair->weights0[0].a, pair->weights1[0].a, ==);
+    return AVX_COMPARE_FLOATS_EQ(pair->weights0[0].a, pair->weights1[0].a);
 }
 #endif
 
 #ifdef __SSE4_2__
 static inline SSE_FLOATS sse_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
-    return SSE_COMPARE_FLOATS(pair->weights0[0].s, pair->weights1[0].s, ==);
+    return SSE_COMPARE_FLOATS_EQ(pair->weights0[0].s, pair->weights1[0].s);
 }
 #endif
 

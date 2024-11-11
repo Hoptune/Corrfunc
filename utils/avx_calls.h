@@ -64,6 +64,7 @@ extern "C" {
 
     // X OP Y
 #define AVX_COMPARE_FLOATS(X,Y,OP)        _mm256_cmp_ps(X,Y,OP)
+#define AVX_COMPARE_FLOATS_EQ(X,Y)        _mm256_cmp_ps(X,Y,_CMP_EQ_OQ)
 #define AVX_BITWISE_AND(X,Y)              _mm256_and_ps(X,Y)
 #define AVX_BITWISE_OR(X,Y)               _mm256_or_ps(X,Y)
 #define AVX_XOR_FLOATS(X,Y)               _mm256_xor_ps(X,Y)
