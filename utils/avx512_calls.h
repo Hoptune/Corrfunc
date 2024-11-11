@@ -285,7 +285,7 @@ extern "C" {
 
 
     // X OP Y
-#define AVX512_COMPARE_FLOATS(X, Y, OP)                           _mm512_cmp_pd_mask(X, Y, OP)
+#define AVX512_COMPARE_FLOATS(X, Y, OP)                           _mm512_cmp_pd(X, Y, OP)
 #define AVX512_MASK_COMPARE_FLOATS(M, X, Y, OP)                   _mm512_mask_cmp_pd_mask(M, X, Y, OP)
 
 #define AVX512_SET_FLOAT(X)                                       _mm512_set1_pd(X)
