@@ -8,6 +8,18 @@ Python wrapper around the C extension for the pair counter in
 
 from __future__ import (division, print_function, absolute_import,
                         unicode_literals)
+try:
+    from Corrfunc._countpairs import countpairs_rp_pi as DDrppi_extn
+except ImportError:
+    msg = "Could not import the C extension for the 3-D "\
+            "real-space pair counter."
+    raise ImportError(msg)
+
+import numpy as np
+from Corrfunc.utils import translate_isa_string_to_enum,\
+    return_file_with_rbins, convert_to_native_endian,\
+    sys_pipes, process_weights
+from future.utils import bytes_to_native_str
 
 __author__ = ('Manodeep Sinha')
 __all__ = ('DDrppi', )
@@ -248,18 +260,6 @@ def DDrppi(autocorr, nthreads, pimax, binfile, X1, Y1, Z1, weights1=None,
      16.753600  23.875500  20.504153       40.0       2492   1.000000
 
     """
-    try:
-        from Corrfunc._countpairs import countpairs_rp_pi as DDrppi_extn
-    except ImportError:
-        msg = "Could not import the C extension for the 3-D "\
-              "real-space pair counter."
-        raise ImportError(msg)
-
-    import numpy as np
-    from Corrfunc.utils import translate_isa_string_to_enum,\
-        return_file_with_rbins, convert_to_native_endian,\
-        sys_pipes, process_weights
-    from future.utils import bytes_to_native_str
 
     if not autocorr:
         if X2 is None or Y2 is None or Z2 is None:
