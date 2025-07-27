@@ -120,7 +120,7 @@ static inline SSE_FLOATS sse_pair_and_DOUBLE(const pair_struct_DOUBLE *pair){
  * The pair weight is the product of the particle weights if the separation between pairs is less
  * than the last number in weight_array. The input shape should be: (weight, x, y, z, sep)
  */
-static inline DOUBLE pair_product_scalecut_DOUBLE(const pair_struct_DOUBLE *pair){
+static inline DOUBLE pair_product_smallscalecut_DOUBLE(const pair_struct_DOUBLE *pair){
     return pair->weights0[0].d*pair->weights1[0].d * 
            (
             ((pair->weights0[1].d-pair->weights1[1].d)*(pair->weights0[1].d-pair->weights1[1].d)+
@@ -131,49 +131,49 @@ static inline DOUBLE pair_product_scalecut_DOUBLE(const pair_struct_DOUBLE *pair
 }
 
 #ifdef __AVX512F__
-static inline AVX512_FLOATS avx512_pair_product_scalecut_DOUBLE(const pair_struct_DOUBLE *pair){
-    weight_union_DOUBLE pair_sep_1 = AVX512_SUB_FLOATS(pair->weights0[1].a512, pair->weights1[1].a512)
-    weight_union_DOUBLE pair_sep_2 = AVX512_SUB_FLOATS(pair->weights0[2].a512, pair->weights1[2].a512)
-    weight_union_DOUBLE pair_sep_3 = AVX512_SUB_FLOATS(pair->weights0[3].a512, pair->weights1[3].a512)
-    pair_sep_1 = AVX512_MULTIPLY_FLOATS(pair_sep_1, pair_sep_1)
-    pair_sep_2 = AVX512_MULTIPLY_FLOATS(pair_sep_2, pair_sep_2)
-    pair_sep_3 = AVX512_MULTIPLY_FLOATS(pair_sep_3, pair_sep_3)
-
-    weight_union_DOUBLE pair_sep = AVX512_ADD_FLOATS(AVX512_ADD_FLOATS(pair_sep_1, pair_sep_2), pair_sep_3)
+static inline AVX512_FLOATS avx512_pair_product_smallscalecut_DOUBLE(const pair_struct_DOUBLE *pair){
+    AVX512_FLOATS pair_sep_1 = AVX512_SUBTRACT_FLOATS(pair->weights0[1].a512, pair->weights1[1].a512);
+    AVX512_FLOATS pair_sep_2 = AVX512_SUBTRACT_FLOATS(pair->weights0[2].a512, pair->weights1[2].a512);
+    AVX512_FLOATS pair_sep_3 = AVX512_SUBTRACT_FLOATS(pair->weights0[3].a512, pair->weights1[3].a512);
+    pair_sep_1 = AVX512_MULTIPLY_FLOATS(pair_sep_1, pair_sep_1);
+    pair_sep_2 = AVX512_MULTIPLY_FLOATS(pair_sep_2, pair_sep_2);
+    pair_sep_3 = AVX512_MULTIPLY_FLOATS(pair_sep_3, pair_sep_3);
+    AVX512_FLOATS pair_sep = AVX512_ADD_FLOATS(AVX512_ADD_FLOATS(pair_sep_1, pair_sep_2), pair_sep_3);
+    
     return AVX512_MULTIPLY_FLOATS(pair->weights0[0].a512, pair->weights1[0].a512) * 
             AVX512_COMPARE_FLOATS(pair_sep
-                , AVX512_MULTIPLY_FLOATS(pair->weights0[4].a512, pair->weights1[4].a512), _CMP_LT_OS);
+                , AVX512_MULTIPLY_FLOATS(pair->weights0[4].a512, pair->weights1[4].a512), _CMP_GT_OS);
 }
 #endif
 
 #ifdef __AVX__
-static inline AVX_FLOATS avx_pair_product_scalecut_DOUBLE(const pair_struct_DOUBLE *pair){
-    weight_union_DOUBLE pair_sep_1 = AVX_SUB_FLOATS(pair->weights0[1].a, pair->weights1[1].a)
-    weight_union_DOUBLE pair_sep_2 = AVX_SUB_FLOATS(pair->weights0[2].a, pair->weights1[2].a)
-    weight_union_DOUBLE pair_sep_3 = AVX_SUB_FLOATS(pair->weights0[3].a, pair->weights1[3].a)
-    pair_sep_1 = AVX_MULTIPLY_FLOATS(pair_sep_1, pair_sep_1)
-    pair_sep_2 = AVX_MULTIPLY_FLOATS(pair_sep_2, pair_sep_2)
-    pair_sep_3 = AVX_MULTIPLY_FLOATS(pair_sep_3, pair_sep_3)
-
-    weight_union_DOUBLE pair_sep = AVX_ADD_FLOATS(AVX_ADD_FLOATS(pair_sep_1, pair_sep_2), pair_sep_3)
+static inline AVX_FLOATS avx_pair_product_smallscalecut_DOUBLE(const pair_struct_DOUBLE *pair){
+    AVX_FLOATS pair_sep_1 = AVX_SUBTRACT_FLOATS(pair->weights0[1].a, pair->weights1[1].a);
+    AVX_FLOATS pair_sep_2 = AVX_SUBTRACT_FLOATS(pair->weights0[2].a, pair->weights1[2].a);
+    AVX_FLOATS pair_sep_3 = AVX_SUBTRACT_FLOATS(pair->weights0[3].a, pair->weights1[3].a);
+    pair_sep_1 = AVX_MULTIPLY_FLOATS(pair_sep_1, pair_sep_1);
+    pair_sep_2 = AVX_MULTIPLY_FLOATS(pair_sep_2, pair_sep_2);
+    pair_sep_3 = AVX_MULTIPLY_FLOATS(pair_sep_3, pair_sep_3);
+    AVX_FLOATS pair_sep = AVX_ADD_FLOATS(AVX_ADD_FLOATS(pair_sep_1, pair_sep_2), pair_sep_3);
+    
     return AVX_MULTIPLY_FLOATS(pair->weights0[0].a, pair->weights1[0].a) * 
             AVX_COMPARE_FLOATS(pair_sep
-                , AVX_MULTIPLY_FLOATS(pair->weights0[4].a, pair->weights1[4].a), _CMP_LT_OS);
+                , AVX_MULTIPLY_FLOATS(pair->weights0[4].a, pair->weights1[4].a), _CMP_GT_OS);
 }
 #endif
 
 #ifdef __SSE4_2__
-static inline SSE_FLOATS sse_pair_product_scalecut_DOUBLE(const pair_struct_DOUBLE *pair){
-    weight_union_DOUBLE pair_sep_1 = SSE_SUBTRACT_FLOATS(pair->weights0[1].s, pair->weights1[1].s)
-    weight_union_DOUBLE pair_sep_2 = SSE_SUBTRACT_FLOATS(pair->weights0[2].s, pair->weights1[2].s)
-    weight_union_DOUBLE pair_sep_3 = SSE_SUBTRACT_FLOATS(pair->weights0[3].s, pair->weights1[3].s)
-    pair_sep_1 = SSE_MULTIPLY_FLOATS(pair_sep_1, pair_sep_1)
-    pair_sep_2 = SSE_MULTIPLY_FLOATS(pair_sep_2, pair_sep_2)
-    pair_sep_3 = SSE_MULTIPLY_FLOATS(pair_sep_3, pair_sep_3)
-
-    weight_union_DOUBLE pair_sep = SSE_ADD_FLOATS(SSE_ADD_FLOATS(pair_sep_1, pair_sep_2), pair_sep_3)
+static inline SSE_FLOATS sse_pair_product_smallscalecut_DOUBLE(const pair_struct_DOUBLE *pair){
+    SSE_FLOATS pair_sep_1 = SSE_SUBTRACT_FLOATS(pair->weights0[1].s, pair->weights1[1].s);
+    SSE_FLOATS pair_sep_2 = SSE_SUBTRACT_FLOATS(pair->weights0[2].s, pair->weights1[2].s);
+    SSE_FLOATS pair_sep_3 = SSE_SUBTRACT_FLOATS(pair->weights0[3].s, pair->weights1[3].s);
+    pair_sep_1 = SSE_MULTIPLY_FLOATS(pair_sep_1, pair_sep_1);
+    pair_sep_2 = SSE_MULTIPLY_FLOATS(pair_sep_2, pair_sep_2);
+    pair_sep_3 = SSE_MULTIPLY_FLOATS(pair_sep_3, pair_sep_3);
+    SSE_FLOATS pair_sep = SSE_ADD_FLOATS(SSE_ADD_FLOATS(pair_sep_1, pair_sep_2), pair_sep_3);
+    
     return SSE_MULTIPLY_FLOATS(pair->weights0[0].s, pair->weights1[0].s) * 
-            SSE_COMPARE_FLOATS_LT(pair_sep, SSE_MULTIPLY_FLOATS(pair->weights0[4].s, pair->weights1[4].s));
+            SSE_COMPARE_FLOATS_GT(pair_sep, SSE_MULTIPLY_FLOATS(pair->weights0[4].s, pair->weights1[4].s));
 }
 #endif
 
@@ -192,8 +192,8 @@ static inline weight_func_t_DOUBLE get_weight_func_by_method_DOUBLE(const weight
             return &pair_product_DOUBLE;
         case PAIR_AND:
             return &pair_and_DOUBLE;
-        case PAIR_PRODUCT_SCALECUT:
-            return &pair_product_scalecut_DOUBLE;
+        case PAIR_PRODUCT_SMALLSCALECUT:
+            return &pair_product_smallscalecut_DOUBLE;
         default:
         case NONE:
             return NULL;
@@ -207,8 +207,8 @@ static inline avx512_weight_func_t_DOUBLE get_avx512_weight_func_by_method_DOUBL
             return &avx512_pair_product_DOUBLE;
         case PAIR_AND:
             return &avx512_pair_and_DOUBLE;
-        case PAIR_PRODUCT_SCALECUT:
-            return &avx512_pair_product_scalecut_DOUBLE;
+        case PAIR_PRODUCT_SMALLSCALECUT:
+            return &avx512_pair_product_smallscalecut_DOUBLE;
         default:
         case NONE:
             return NULL;
@@ -224,8 +224,8 @@ static inline avx_weight_func_t_DOUBLE get_avx_weight_func_by_method_DOUBLE(cons
             return &avx_pair_product_DOUBLE;
         case PAIR_AND:
             return &avx_pair_and_DOUBLE;
-        case PAIR_PRODUCT_SCALECUT:
-            return &avx_pair_product_scalecut_DOUBLE;
+        case PAIR_PRODUCT_SMALLSCALECUT:
+            return &avx_pair_product_smallscalecut_DOUBLE;
         default:
         case NONE:
             return NULL;
@@ -240,8 +240,8 @@ static inline sse_weight_func_t_DOUBLE get_sse_weight_func_by_method_DOUBLE(cons
             return &sse_pair_product_DOUBLE;
         case PAIR_AND:
             return &sse_pair_and_DOUBLE;
-        case PAIR_PRODUCT_SCALECUT:
-            return &sse_pair_product_scalecut_DOUBLE;
+        case PAIR_PRODUCT_SMALLSCALECUT:
+            return &sse_pair_product_smallscalecut_DOUBLE;
         default:
         case NONE:
             return NULL;

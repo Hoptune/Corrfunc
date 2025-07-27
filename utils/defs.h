@@ -360,7 +360,7 @@ typedef enum {
   NONE=-42, /* default */
   PAIR_PRODUCT=0,
   PAIR_AND=1,
-  PAIR_PRODUCT_SCALECUT=2,
+  PAIR_PRODUCT_SMALLSCALECUT=2,
   NUM_WEIGHT_TYPE
 } weight_method_t; // type of weighting to apply
 
@@ -372,8 +372,8 @@ static inline int get_num_weights_by_method(const weight_method_t method){
             return 1;
         case PAIR_AND:
             return 1;
-        case PAIR_PRODUCT_SCALECUT:
-            return 1;
+        case PAIR_PRODUCT_SMALLSCALECUT:
+            return 5;
         default:
         case NONE:
             return 0;
@@ -398,8 +398,8 @@ static inline int get_weight_method_by_name(const char *name, weight_method_t *m
         *method = PAIR_AND;
         return EXIT_SUCCESS;
     }
-    if(strcmp(name, "pair_product_scalecut") == 0){
-        *method = PAIR_PRODUCT_SCALECUT;
+    if(strcmp(name, "pair_product_smallscalecut") == 0){
+        *method = PAIR_PRODUCT_SMALLSCALECUT;
         return EXIT_SUCCESS;
     }
     return EXIT_FAILURE;
